@@ -89,3 +89,34 @@ describe("costco MCP launcher", () => {
     assert.equal(printed.entry, join(here, "index.ts"));
   });
 });
+
+describe("shopper-facing copy", () => {
+  const skill = readFileSync(join(pluginRoot, "skills/costco-shop/SKILL.md"), "utf8");
+  const mcpSources = [
+    "index.ts",
+    "copy.ts",
+    "payload.ts",
+    "savings.ts",
+  ].map((name) => readFileSync(join(here, name), "utf8")).join("\n");
+
+  it("skill no longer tells the bot to say this is a demo or ask about mood boards", () => {
+    assert.equal(/Always say this is a demo/i.test(skill), false);
+    assert.equal(/Demo only; not affiliated/i.test(skill), false);
+    assert.match(skill, /Never say [“"]demo/i);
+    assert.match(skill, /Never ask/i);
+    assert.match(skill, /mood board/i);
+    assert.match(skill, /\*\*Purchase\*\*/);
+    assert.match(skill, /\*\*Make swaps\*\*/);
+    assert.match(skill, /You saved/);
+  });
+
+  it("MCP success path no longer injects shopper-facing demo disclaimers", () => {
+    assert.equal(mcpSources.includes("DEMO_DISCLAIMER"), false);
+    assert.equal(mcpSources.includes("Demo only"), false);
+    assert.equal(mcpSources.includes("not affiliated"), false);
+    assert.equal(/demo:\s*true/.test(mcpSources), false);
+    assert.equal(mcpSources.includes("withDisclaimer"), false);
+    assert.match(mcpSources, /youSaved/);
+    assert.match(mcpSources, /savingsLabel/);
+  });
+});
