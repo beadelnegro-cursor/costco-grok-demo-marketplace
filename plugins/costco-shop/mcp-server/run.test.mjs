@@ -4,10 +4,17 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { resolvePluginPaths } from "./run.mjs";
+import { findRunnerFile, resolvePluginPaths } from "./run.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const pluginRoot = join(here, "..");
+const marketplaceRoot = join(pluginRoot, "..", "..");
+const runner = join(here, "run.mjs");
+
+function hostCommand() {
+  const mcp = JSON.parse(readFileSync(join(pluginRoot, ".mcp.json"), "utf8"));
+  return mcp.mcpServers.costco;
+}
 
 describe("costco MCP launcher", () => {
   it("resolves the plugin directory from this file, not cwd", () => {
@@ -20,11 +27,10 @@ describe("costco MCP launcher", () => {
   });
 
   it("prints the same paths when spawned from a different cwd", () => {
-    const result = spawnSync(
-      process.execPath,
-      [join(here, "run.mjs"), "--print-paths"],
-      { cwd: "/", encoding: "utf8" },
-    );
+    const result = spawnSync(process.execPath, [runner, "--print-paths"], {
+      cwd: "/",
+      encoding: "utf8",
+    });
     assert.equal(result.status, 0, result.stderr);
     const printed = JSON.parse(result.stdout);
     assert.equal(printed.via, "import.meta.url");
@@ -38,13 +44,48 @@ describe("costco MCP launcher", () => {
     assert.equal(resolved.entry, join(here, "index.ts"));
   });
 
-  it("does not use unexpanded ${CLAUDE_PLUGIN_ROOT} or bash env defaults", () => {
-    const mcp = JSON.parse(readFileSync(join(pluginRoot, ".mcp.json"), "utf8"));
-    const server = mcp.mcpServers.costco;
+  it("finds run.mjs from the marketplace workspace without plugin-root env", () => {
+    const found = findRunnerFile();
+    assert.equal(found, runner);
+  });
+
+  it("does not use unexpanded plugin-root or bash env placeholders", () => {
+    const server = hostCommand();
     assert.equal(server.command, "node");
-    assert.deepEqual(server.args, ["./mcp-server/run.mjs"]);
+    assert.equal(server.args[0], "--input-type=module");
+    assert.equal(server.args[1], "-e");
+    assert.match(server.args[2], /mcp-server\/run\.mjs/);
     const blob = JSON.stringify(server);
     assert.equal(blob.includes("${CLAUDE_PLUGIN_ROOT}"), false);
     assert.equal(blob.includes("${COSTCO_DEMO_API_BASE"), false);
+    assert.equal(blob.includes("${PLUGIN_ROOT}"), false);
+  });
+
+  it("host -e entry finds the plugin from marketplace cwd=/workspace", () => {
+    const server = hostCommand();
+    const result = spawnSync(server.command, server.args, {
+      cwd: marketplaceRoot,
+      encoding: "utf8",
+      env: { ...process.env, COSTCO_MCP_PRINT_PATHS: "1" },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    const printed = JSON.parse(result.stdout);
+    assert.equal(printed.entry, join(here, "index.ts"));
+  });
+
+  it("host -e entry uses CLAUDE_PLUGIN_ROOT when cwd has no plugin files", () => {
+    const server = hostCommand();
+    const result = spawnSync(server.command, server.args, {
+      cwd: "/tmp",
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        COSTCO_MCP_PRINT_PATHS: "1",
+        CLAUDE_PLUGIN_ROOT: pluginRoot,
+      },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    const printed = JSON.parse(result.stdout);
+    assert.equal(printed.entry, join(here, "index.ts"));
   });
 });

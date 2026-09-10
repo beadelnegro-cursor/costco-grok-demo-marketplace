@@ -2,7 +2,11 @@
   "mcpServers": {
     "costco": {
       "command": "node",
-      "args": ["./mcp-server/run.mjs"]
+      "args": [
+        "--input-type=module",
+        "-e",
+        "import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'; import { homedir } from 'node:os'; import { join } from 'node:path'; import { pathToFileURL } from 'node:url'; const open = '$' + '{'; function runnerAt(root) { if (!root || String(root).includes(open)) return ''; const p = join(root, 'mcp-server/run.mjs'); return existsSync(p) ? p : ''; } const ranked = []; function consider(root, score) { const p = runnerAt(root); if (p) ranked.push([score, p]); } for (const key of ['CLAUDE_PLUGIN_ROOT', 'PLUGIN_ROOT', 'CURSOR_PLUGIN_ROOT']) consider(process.env[key], Number.POSITIVE_INFINITY); consider(process.cwd(), Number.POSITIVE_INFINITY); consider(join(process.cwd(), 'plugins/costco-shop'), Number.POSITIVE_INFINITY); function walk(dir, depth) { if (depth < 0) return; let ents = []; try { ents = readdirSync(dir, { withFileTypes: true }); } catch { return; } try { if (JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')).name === 'costco-shop') { const p = runnerAt(dir); if (p) ranked.push([statSync(p).mtimeMs, p]); } } catch { /* not this plugin */ } for (const e of ents) { if (e.isDirectory() && e.name !== 'node_modules' && e.name !== '.git') walk(join(dir, e.name), depth - 1); } } for (const rel of ['.cursor/plugins/cache', '.claude/plugins', '.grok/plugins']) { const cache = join(homedir(), rel); if (existsSync(cache)) walk(cache, 6); } ranked.sort((a, b) => b[0] - a[0]); if (!ranked[0]) { console.error('[costco-mcp] could not locate mcp-server/run.mjs (cwd=' + process.cwd() + ')'); process.exit(1); } const { main } = await import(pathToFileURL(ranked[0][1]).href); main();"
+      ]
     }
   }
 }
