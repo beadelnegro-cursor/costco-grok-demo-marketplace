@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Costco shopping assistant MCP server (GTMKO demo). Not affiliated with Costco Wholesale.",
   "scripts": {
-    "mcp": "tsx mcp-server/index.ts",
+    "mcp": "node mcp-server/run.mjs",
+    "test": "node --test mcp-server/run.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

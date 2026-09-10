@@ -64,6 +64,7 @@ plugins/costco-shop/
   .grok-plugin/plugin.json
   .mcp.json
   assets/logo.png
+  mcp-server/run.mjs
   mcp-server/index.ts
   skills/costco-shop/SKILL.md
 ```

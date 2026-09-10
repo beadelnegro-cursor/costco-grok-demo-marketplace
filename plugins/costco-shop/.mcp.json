@@ -1,11 +1,8 @@
 {
   "mcpServers": {
     "costco": {
-      "command": "npx",
-      "args": ["-y", "tsx", "${CLAUDE_PLUGIN_ROOT}/mcp-server/index.ts"],
-      "env": {
-        "COSTCO_DEMO_API_BASE": "${COSTCO_DEMO_API_BASE:-http://127.0.0.1:3000}"
-      }
+      "command": "node",
+      "args": ["./mcp-server/run.mjs"]
     }
   }
 }
