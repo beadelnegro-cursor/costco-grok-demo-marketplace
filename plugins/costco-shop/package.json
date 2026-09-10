@@ -1,0 +1,23 @@
+{
+  "name": "costco-shop",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Costco shopping assistant MCP server (GTMKO demo). Not affiliated with Costco Wholesale.",
+  "scripts": {
+    "mcp": "tsx mcp-server/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
