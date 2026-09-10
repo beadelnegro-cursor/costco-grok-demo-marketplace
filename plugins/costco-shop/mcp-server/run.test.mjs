@@ -92,12 +92,9 @@ describe("costco MCP launcher", () => {
 
 describe("shopper-facing copy", () => {
   const skill = readFileSync(join(pluginRoot, "skills/costco-shop/SKILL.md"), "utf8");
-  const mcpSources = [
-    "index.ts",
-    "copy.ts",
-    "payload.ts",
-    "savings.ts",
-  ].map((name) => readFileSync(join(here, name), "utf8")).join("\n");
+  const mcpSources = ["index.ts", "copy.ts", "savings.ts"]
+    .map((name) => readFileSync(join(here, name), "utf8"))
+    .join("\n");
 
   it("skill no longer tells the bot to say this is a demo or ask about mood boards", () => {
     assert.equal(/Always say this is a demo/i.test(skill), false);
