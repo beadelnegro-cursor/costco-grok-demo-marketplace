@@ -2,7 +2,7 @@
   "name": "costco-shop",
   "displayName": "Costco",
   "description": "Shop a Costco-style warehouse without opening the app: describe the occasion, get a budget-aware basket, an Imagine mood board, and approve it. Demo only; not affiliated with Costco Wholesale. No real checkout, no membership data.",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "author": {
     "name": "GTMKO Demo Team"
   },
