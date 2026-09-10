@@ -2,7 +2,7 @@
  * Warehouse vs typical grocery/retail equivalent.
  *
  * The shopping API catalog often has warehouse `price` only. Shopper-facing
- * "You saved $X at Costco" must come from structured fields, not a silent
+ * "You're saving $X with Costco" must come from structured fields, not a silent
  * invented number. When a line already carries compare-at / MSRP / retail,
  * we use that (source: api). Otherwise we apply the category multiplier
  * table below (source: retail-equivalent) so the MCP response always has
@@ -122,7 +122,7 @@ export function formatUsd(value: number): string {
 
 export function savingsLabelFor(youSaved: number): string | null {
   if (!(youSaved > 0)) return null;
-  return `You saved ${formatUsd(youSaved)} at Costco`;
+  return `You're saving ${formatUsd(youSaved)} with Costco`;
 }
 
 export function multiplierForCategory(category?: string | null): number {

@@ -90,7 +90,7 @@ describe("enrichBasket", () => {
     assert.equal(result.savings.compareAtTotal, 53);
     assert.equal(result.savings.youSaved, 13);
     assert.equal(result.savings.savingsTotal, 13);
-    assert.equal(result.savings.savingsLabel, "You saved $13.00 at Costco");
+    assert.equal(result.savings.savingsLabel, "You're saving $13.00 with Costco");
     assert.equal(result.basket?.title, "Halloween table");
     assert.equal(result.basket?.lines.length, 2);
 
@@ -140,7 +140,7 @@ describe("shopper payloads", () => {
   });
 
   it("formats the savings line the skill is told to read", () => {
-    assert.equal(savingsLabelFor(12.5), "You saved $12.50 at Costco");
+    assert.equal(savingsLabelFor(12.5), "You're saving $12.50 with Costco");
     assert.equal(savingsLabelFor(0), null);
     assert.equal(formatUsd(4), "$4.00");
     assert.match(CART_NOTE, /Purchase/);

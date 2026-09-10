@@ -45,7 +45,7 @@ Shopper-facing replies (skill + successful MCP payloads) must **never** say “d
 
 ### Costco savings fields (MCP-enriched)
 
-`plan_cart`, `get_cart`, `set_cart_from_plan`, and catalog search responses include structured savings so the bot can say **You saved $X at Costco** without inventing a number.
+`plan_cart`, `get_cart`, `set_cart_from_plan`, and catalog search responses include structured savings so the bot can say **You’re saving $X with Costco** (soft, once, above the CTAs) without inventing a number.
 
 Per line (when a warehouse `price` exists):
 
@@ -62,7 +62,7 @@ Cart / plan totals on `savings` (and mirrored onto the parent line array when pr
 | `warehouseTotal` | Sum of warehouse `price × qty` |
 | `compareAtTotal` | Sum of `compareAt × qty` |
 | `youSaved` / `savingsTotal` | Sum of line `saved` |
-| `savingsLabel` | `You saved $X.XX at Costco` when `youSaved > 0`, else `null` |
+| `savingsLabel` | `You're saving $X.XX with Costco` when `youSaved > 0`, else `null` |
 
 **Method:** if the shopping API already returns `compareAt`, `msrp`, `retailPrice`, `listPrice`, or `typicalPrice`, MCP uses that (`savingsSource: "api"`). Otherwise MCP multiplies warehouse unit price by a documented category table in `plugins/costco-shop/mcp-server/savings.ts` (party/seasonal ~1.35×, bakery 1.35×, grocery default 1.28×, electronics 1.12×, …). These are typical-retail equivalents, not live competitor quotes. No extra API contract is required.
 

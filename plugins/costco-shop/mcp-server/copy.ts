@@ -15,10 +15,10 @@ export const TOOL_DESCRIPTIONS = {
 } as const;
 
 export const PLAN_NOTE =
-  "Always generate a mood board with this plan (do not ask). Present the image first if imageUrl exists, then the basket. Use savings.youSaved / savings.savingsLabel only — never invent a savings number. Close with a question widget labeled Purchase (primary) and Make swaps. Write the cart only after Purchase.";
+  "Always generate a mood board with this plan (do not ask). Present the image first if imageUrl exists, then the basket. If youSaved > 0, one soft line just above the CTAs using savings.savingsLabel (You're saving $X with Costco) — not a banner. Close with a question widget labeled Purchase (primary) and Make swaps. Write the cart only after Purchase.";
 
 export const CART_NOTE =
-  "Present the basket with savings.youSaved / savings.savingsLabel when youSaved > 0. CTAs: Purchase (primary) and Make swaps. Do not invent savings.";
+  "Present the basket. If youSaved > 0, one soft savings.savingsLabel line just above Purchase / Make swaps. Do not invent savings or hard-sell.";
 
 export const MOOD_BOARD_NOTE =
   "If imageUrl is set, show that image above the cart with almost no caption. If imageUrl is null, skip the image and still present the cart. Do not invent a URL or narrate a vibe.";

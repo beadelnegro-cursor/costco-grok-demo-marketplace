@@ -14,7 +14,7 @@ This skill drives the `costco` MCP server. The Next.js shopping API is not in th
 - **Never say “demo”**, “demo only”, “not affiliated”, “not a real checkout”, or anything like it. Legal copy lives in marketplace metadata, not this conversation.
 - **Never ask** whether to generate a mood board. Always generate it with the plan.
 - **Never narrate the vibe** (“Mood board for the table — cute-spooky…”). Almost no caption on the image.
-- **Never invent savings.** Say “You saved $X at Costco” only from `savings.youSaved` / `savings.savingsLabel` on the tool result. If `youSaved` is missing or 0, skip the savings line.
+- **Never invent savings.** If `youSaved > 0`, mention it once, softly — “You’re saving $X with Costco” from `savings.youSaved` / `savings.savingsLabel`. Not a banner, not a hard sell. If `youSaved` is missing or 0, skip it.
 - **Never invent image URLs.** Prefer `imageUrl` / collage URL from `generate_mood_board`. If it is null, skip the image and still present the cart.
 - If a tool fails, say the warehouse catalog is briefly unavailable and offer to retry. Do not mention affiliation or internal setup.
 
@@ -37,7 +37,7 @@ Exact order:
 1. **Mood board image** — markdown image from `imageUrl` when present. No vibe caption. One short title at most, or none.
 2. **Cart** — title + Costco total (`savings.warehouseTotal` or the plan total).
 3. **Line items** — name, qty, warehouse price. Tight list, not a dump.
-4. **You saved $X at Costco** — from `savings.savingsLabel` or `You saved ${savings.youSaved} at Costco` when `youSaved > 0`.
+4. **Savings** — one quiet line on the cart summary, just above the CTAs, when `youSaved > 0`: “You’re saving $X with Costco” (`savings.savingsLabel`). Do not shout it, bold it as a hero, or recap value in a second sentence.
 5. **Question widget** (not a text-only prompt) with exactly two choices:
    - **Purchase** (primary)
    - **Make swaps**
@@ -49,7 +49,7 @@ Do not label the buttons “Buy · $xx” or “Keep editing”. Do not add a th
 Treat **Purchase**, “yes”, “looks good”, “get it”, or equivalent as approval.
 
 1. `set_cart_from_plan` with the approved `lines` (and optional `title` / `intent`) if the cart is not already written.
-2. Warm confirmation: basket is confirmed, Costco total, and the same savings line when `youSaved > 0`.
+2. Warm confirmation: basket is confirmed and the Costco total. If `youSaved > 0`, the same soft savings line — still not a hard sell.
 3. Still no “demo” language. Do not collect payment, membership numbers, or warehouse IDs as fact.
 
 ### 4. Make swaps / chat edits

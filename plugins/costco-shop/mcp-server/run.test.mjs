@@ -104,7 +104,7 @@ describe("shopper-facing copy", () => {
     assert.match(skill, /mood board/i);
     assert.match(skill, /\*\*Purchase\*\*/);
     assert.match(skill, /\*\*Make swaps\*\*/);
-    assert.match(skill, /You saved/);
+    assert.match(skill, /You.re saving/);
   });
 
   it("MCP success path no longer injects shopper-facing demo disclaimers", () => {
