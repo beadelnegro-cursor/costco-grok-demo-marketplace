@@ -1,0 +1,20 @@
+{
+  "name": "costco-grok-demo",
+  "owner": {
+    "name": "GTMKO Demo Team"
+  },
+  "metadata": {
+    "description": "GTMKO Use Case 2 demo marketplace: Costco-style in-app AI shopping assistant plugin for Grok Bot. Demo only; not affiliated with Costco Wholesale.",
+    "version": "1.0.0",
+    "pluginRoot": "plugins"
+  },
+  "plugins": [
+    {
+      "name": "costco-shop",
+      "displayName": "Costco",
+      "source": "costco-shop",
+      "description": "Costco shopping assistant: budget-aware baskets, Imagine mood boards, conversational adjustments, approve to cart. Demo only; not affiliated with Costco Wholesale. Requires demo API at COSTCO_DEMO_API_BASE (default http://127.0.0.1:3000).",
+      "logo": "assets/logo.png"
+    }
+  ]
+}
